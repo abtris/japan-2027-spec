@@ -19,9 +19,14 @@ Keep the project Root Directory set to `.` and connect a public Vercel Blob stor
 - `NEXT_PUBLIC_SITE_URL`: production origin, for example `https://japan-2027.vercel.app`
 - `ADMIN_PASSWORD`: a long private publishing password
 - `ADMIN_SESSION_SECRET`: at least 32 random characters
+- `ADMIN_API_TOKEN`: an independent token of at least 32 characters for CLI and app access
 - `BLOB_READ_WRITE_TOKEN`: added automatically when the Blob store is connected
 
 After changing `NEXT_PUBLIC_SITE_URL`, redeploy so canonical and social URLs use the production origin.
+
+## Admin API
+
+The existing entry and direct-upload endpoints accept `Authorization: Bearer $ADMIN_API_TOKEN`. Their client-generation contract is available at [`/openapi.yaml`](./public/openapi.yaml).
 
 ## Staging and observability
 

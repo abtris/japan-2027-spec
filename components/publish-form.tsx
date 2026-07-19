@@ -3,12 +3,24 @@
 import { upload } from "@vercel/blob/client";
 import { parse } from "exifr";
 import { useRouter } from "next/navigation";
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import type { JournalEntry, JournalPhoto, PhotoExif } from "../lib/entries";
 
 type Result = { message: string; urls?: { cs: string; en: string }; error?: boolean };
 type PhotoDraft = Omit<JournalPhoto, "url"> & { id: string; url?: string; file?: File };
 type PhotoTextField = "altCs" | "altEn" | "titleCs" | "titleEn" | "descriptionCs" | "descriptionEn";
+
+function LocalPhotoPreview({ file }: { file: File }) {
+  const [url, setUrl] = useState("");
+
+  useEffect(() => {
+    const nextUrl = URL.createObjectURL(file);
+    setUrl(nextUrl);
+    return () => URL.revokeObjectURL(nextUrl);
+  }, [file]);
+
+  return url ? <img src={url} alt="" /> : null;
+}
 
 const imageTypes = ["image/jpeg", "image/png", "image/webp"];
 const exifFields = ["Make", "Model", "LensModel", "FocalLength", "FNumber", "ExposureTime", "ISO", "DateTimeOriginal"];
@@ -202,7 +214,10 @@ export function PublishForm({ entries }: { entries: JournalEntry[] }) {
           <div className="photo-editor">
             <div className="admin-section-heading"><h2>Fotografie <small>{photos.length}/5</small></h2><label className="file-button">Přidat fotografie<input type="file" multiple disabled={photos.length >= 5} accept={imageTypes.join(",")} onChange={addPhotos} /></label></div>
             {photos.map((photo, index) => <article className="admin-photo" key={photo.id}>
-              <div className="admin-photo__preview">{photo.url ? <img src={photo.url} alt="" /> : <strong>{photo.file?.name}</strong>}</div>
+              <div className="admin-photo__preview">
+                {photo.url ? <img src={photo.url} alt="" /> : photo.file ? <LocalPhotoPreview file={photo.file} /> : null}
+                {photo.file ? <strong>{photo.file.name}</strong> : null}
+              </div>
               <div className="form-grid">
                 <label>Alt text česky<input required value={photo.altCs} onChange={(event) => updatePhoto(photo.id, "altCs", event.target.value)} maxLength={300} /></label>
                 <label>Alt text English<input required value={photo.altEn} onChange={(event) => updatePhoto(photo.id, "altEn", event.target.value)} maxLength={300} /></label>

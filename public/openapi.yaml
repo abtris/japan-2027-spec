@@ -1,0 +1,212 @@
+openapi: 3.1.0
+info:
+  title: Japan 2027 Admin API
+  version: 1.0.0
+  description: Manage journal entries and request direct photo-upload tokens.
+servers:
+  - url: https://japan.prskavec.net
+    description: Production
+security:
+  - bearerAuth: []
+paths:
+  /api/admin/entries:
+    get:
+      operationId: listEntries
+      summary: List journal entries
+      responses:
+        "200":
+          description: Entries sorted by date, newest first.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [entries]
+                properties:
+                  entries:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/JournalEntry"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      operationId: saveEntry
+      summary: Create or replace a journal entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JournalEntryInput"
+      responses:
+        "200":
+          description: Saved entry and its public URLs.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [entry, urls]
+                properties:
+                  entry:
+                    $ref: "#/components/schemas/JournalEntry"
+                  urls:
+                    type: object
+                    required: [cs, en]
+                    properties:
+                      cs: { type: string }
+                      en: { type: string }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    delete:
+      operationId: deleteEntry
+      summary: Delete a journal entry and its photos
+      parameters:
+        - name: slug
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/Slug"
+      responses:
+        "200":
+          description: Entry deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok]
+                properties:
+                  ok: { type: boolean, const: true }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /api/admin/upload:
+    post:
+      operationId: createPhotoUploadToken
+      summary: Request a Vercel Blob direct-upload token
+      description: Use the returned token to upload directly to Vercel Blob. The client payload must contain the same slug as the image pathname.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [type, payload]
+              properties:
+                type:
+                  type: string
+                  const: blob.generate-client-token
+                payload:
+                  type: object
+                  additionalProperties: false
+                  required: [pathname, multipart, clientPayload]
+                  properties:
+                    pathname:
+                      type: string
+                      pattern: ^images/[a-z0-9]+(?:-[a-z0-9]+)*/.+$
+                      example: images/tokyo/shibuya.jpg
+                    multipart:
+                      type: boolean
+                      default: false
+                    clientPayload:
+                      type: string
+                      description: JSON string containing the entry slug.
+                      example: '{"slug":"tokyo"}'
+      responses:
+        "200":
+          description: Short-lived Vercel Blob client token.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [type, clientToken]
+                properties:
+                  type: { type: string, const: blob.generate-client-token }
+                  clientToken: { type: string }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  responses:
+    BadRequest:
+      description: Invalid request.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Unauthorized:
+      description: Missing or invalid API token.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+    Slug:
+      type: string
+      maxLength: 80
+      pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+    PhotoExif:
+      type: object
+      additionalProperties: false
+      properties:
+        camera: { type: string, maxLength: 160 }
+        lens: { type: string, maxLength: 200 }
+        focalLength: { type: number, exclusiveMinimum: 0, maximum: 2000 }
+        aperture: { type: number, exclusiveMinimum: 0, maximum: 128 }
+        exposureTime: { type: number, exclusiveMinimum: 0, maximum: 86400 }
+        iso: { type: number, exclusiveMinimum: 0, maximum: 10000000 }
+        capturedAt: { type: string, format: date-time }
+    JournalPhoto:
+      type: object
+      additionalProperties: false
+      required: [url, altCs, altEn]
+      properties:
+        url: { type: string, format: uri }
+        altCs: { type: string, minLength: 1, maxLength: 300 }
+        altEn: { type: string, minLength: 1, maxLength: 300 }
+        titleCs: { type: string, maxLength: 160 }
+        titleEn: { type: string, maxLength: 160 }
+        descriptionCs: { type: string, maxLength: 1000 }
+        descriptionEn: { type: string, maxLength: 1000 }
+        exif:
+          $ref: "#/components/schemas/PhotoExif"
+    JournalEntryInput:
+      type: object
+      required: [slug, date, placeCs, placeEn, titleCs, titleEn, summaryCs, summaryEn, bodyCs, bodyEn, photos]
+      properties:
+        slug:
+          $ref: "#/components/schemas/Slug"
+        date: { type: string, format: date }
+        placeCs: { type: string, minLength: 1, maxLength: 120 }
+        placeEn: { type: string, minLength: 1, maxLength: 120 }
+        titleCs: { type: string, minLength: 1, maxLength: 160 }
+        titleEn: { type: string, minLength: 1, maxLength: 160 }
+        summaryCs: { type: string, minLength: 1, maxLength: 320 }
+        summaryEn: { type: string, minLength: 1, maxLength: 320 }
+        bodyCs: { type: string, minLength: 1, maxLength: 20000 }
+        bodyEn: { type: string, minLength: 1, maxLength: 20000 }
+        photos:
+          type: array
+          minItems: 1
+          maxItems: 5
+          items:
+            $ref: "#/components/schemas/JournalPhoto"
+    JournalEntry:
+      allOf:
+        - $ref: "#/components/schemas/JournalEntryInput"
+        - type: object
+          required: [publishedAt]
+          properties:
+            publishedAt: { type: string, format: date-time }
