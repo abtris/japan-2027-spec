@@ -7,13 +7,14 @@ The repository contains a complete bilingual static site and is already connecte
 **Goals:**
 
 - Preserve the existing Czech and English design, routes, itinerary, metadata, and no-JavaScript public reading experience.
-- Let one owner sign in and publish validated bilingual journal entries with a photograph.
+- Let one owner sign in and list, create, edit, and delete validated bilingual journal entries with one to five photographs.
+- Preserve useful shooting metadata for photographers while excluding private or unrelated EXIF fields.
 - Persist uploads independently from deployments and show them immediately on public pages.
 - Make the repository build and deploy as a standard Next.js project on Vercel.
 
 **Non-Goals:**
 
-- Multiple authors, roles, public accounts, comments, drafts, rich-text editing, media galleries, or content search.
+- Multiple authors, roles, public accounts, comments, drafts, rich-text editing, or content search.
 - A generalized CMS, database, image editor, or offline synchronization.
 - Importing arbitrary HTML or Markdown from visitors.
 
@@ -27,7 +28,7 @@ Keeping the static files alongside an unrelated API was considered, but it would
 
 ### Store entries and photographs in Vercel Blob
 
-Use one public Blob store. Photographs upload directly from the browser through Vercel Blob client-upload tokens, avoiding the Vercel Function request-body limit. Each entry is stored as validated JSON under `entries/<slug>.json`; its image uses a randomized path under `images/<slug>/`. Public pages list and parse the entry JSON, with the existing introductory entry retained as an in-code fallback.
+Use one public Blob store. Photographs upload directly from the browser through Vercel Blob client-upload tokens, avoiding the Vercel Function request-body limit. Each entry is stored as validated JSON under `entries/<slug>.json`; its images use randomized paths under `images/<slug>/`. Public pages list and parse the entry JSON, with the existing introductory entry retained as an in-code fallback.
 
 A relational database was rejected for the first version because entries are independent documents, writes are rare, and there is one author. Add a database when editing history, relationships, search, or concurrent writers become real requirements.
 
@@ -37,9 +38,15 @@ The administrator submits `ADMIN_PASSWORD` over HTTPS. A successful login sets a
 
 Hosted identity providers were considered but add accounts and external configuration that are unnecessary for a single owner. The password/session scheme can later be replaced without changing public content URLs.
 
-### Accept structured plain text and one image
+### Accept structured plain text and a small photo set
 
-The form requires a safe slug, date, Czech and English titles, summaries, bodies, and alternative text. The image must be JPEG, PNG, or WebP and no larger than 20 MB. Bodies are rendered as escaped paragraphs rather than HTML or Markdown, eliminating an unnecessary sanitization dependency.
+The form requires a safe slug, date, Czech and English titles, summaries, and bodies. Each entry requires one to five JPEG, PNG, or WebP images no larger than 20 MB each, with localized alternative text and optional localized title and description. Bodies are rendered as escaped paragraphs rather than HTML or Markdown, eliminating an unnecessary sanitization dependency.
+
+The administrator extracts only camera body, lens, focal length, aperture, shutter speed, ISO, and capture time from each selected image before processing. It then uses the browser canvas to resize the image to at most 2400 pixels on its longest edge and encode it as WebP at 85% quality before upload. The validated EXIF values are stored separately with the photo and displayed on its public entry page; camera-sized originals, GPS, and unselected raw EXIF fields are never persisted.
+
+### Edit and delete through the existing entry documents
+
+The administrator page lists stored entries and reuses the publishing form for both creation and editing. Saving an existing entry replaces its JSON document; deleting removes the entry document and its entry-specific images after explicit confirmation. This keeps the existing Blob document model instead of adding a database or CMS.
 
 ### Deploy from the existing GitHub production branch
 
@@ -50,7 +57,6 @@ Add `package.json` at the repository root so Vercel auto-detects Next.js with Ro
 - Blob listing and fetching performs one read per entry → acceptable for a small personal journal; move entry metadata to a database when volume makes this measurable.
 - Public Blob content is readable by URL → store only intended public journal text and photos; credentials and drafts never enter Blob.
 - Losing the administrator password blocks publishing → rotate the Vercel environment variable and redeploy.
-- The first version does not edit or delete published entries → correct mistakes by republishing a corrected slug through Blob tooling; add explicit editing only when needed.
 - A failed JSON write after a photo upload can leave an unused image → harmless at expected volume; periodic Blob cleanup is sufficient.
 
 ## Migration Plan
@@ -65,4 +71,4 @@ Rollback is a Git revert to the last static commit followed by a Vercel redeploy
 
 ## Open Questions
 
-None. The first version intentionally supports one owner and one photograph per published entry.
+None. The feature intentionally supports one owner and a maximum of five photographs per published entry.

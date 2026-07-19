@@ -31,8 +31,9 @@ export function entryMetadata(entry: JournalEntry, locale: Locale): Metadata {
   const title = `${english ? entry.titleEn : entry.titleCs} — ${english ? "Japan" : "Japonsko"} 2027`;
   const description = english ? entry.summaryEn : entry.summaryCs;
   const path = `${prefix}/entries/${entry.slug}/`;
-  const image = entry.photoUrl || "/assets/social-preview.png";
-  const alt = english ? entry.photoAltEn : entry.photoAltCs;
+  const photo = entry.photos[0];
+  const image = photo?.url || "/assets/social-preview.png";
+  const alt = english ? photo?.altEn : photo?.altCs;
   return {
     metadataBase: siteUrl,
     title,

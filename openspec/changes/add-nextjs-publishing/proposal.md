@@ -5,7 +5,8 @@ The journal now needs durable publishing during the trip and a Vercel deployment
 ## What Changes
 
 - Migrate the existing bilingual site to Next.js App Router while preserving its design, public URLs, itinerary, accessibility, and metadata.
-- Add a private administrator sign-in and publishing form for bilingual journal entries and one photograph per entry.
+- Add a private administrator area for listing, creating, editing, and deleting bilingual journal entries with one to five photographs per entry.
+- Let each photograph carry optional bilingual title and description text plus selected shooting EXIF data.
 - Store entry JSON and uploaded photographs in Vercel Blob and render published entries in the existing journal section and localized entry pages.
 - Add root-level package and environment configuration so Vercel detects and builds Next.js correctly.
 - Use the existing GitHub repository as the deployment source and connect its production branch to Vercel.
