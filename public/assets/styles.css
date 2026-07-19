@@ -578,6 +578,7 @@ body > footer {
 
 .admin-photo__preview { margin-bottom: 1rem; }
 .admin-photo__preview img { width: min(100%, 18rem); height: auto; display: block; }
+.admin-photo__preview strong { display: block; margin-top: .5rem; overflow-wrap: anywhere; }
 .button-danger { border-color: #73382f; background: transparent; color: #73382f; }
 .cancel-edit { margin-left: .5rem; }
 

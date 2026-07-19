@@ -1,13 +1,10 @@
-import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac } from "node:crypto";
 import { cookies } from "next/headers";
 import type { NextRequest, NextResponse } from "next/server";
+import { equal, verifyBearer } from "./auth-core";
 
 const COOKIE_NAME = "japan-admin";
 const SESSION_SECONDS = 60 * 60 * 12;
-
-function equal(left: string, right: string) {
-  return timingSafeEqual(createHash("sha256").update(left).digest(), createHash("sha256").update(right).digest());
-}
 
 function secret() {
   return process.env.ADMIN_SESSION_SECRET || "";
@@ -36,7 +33,8 @@ export async function isAuthenticated() {
 }
 
 export function isAuthenticatedRequest(request: NextRequest) {
-  return verifyToken(request.cookies.get(COOKIE_NAME)?.value);
+  return verifyToken(request.cookies.get(COOKIE_NAME)?.value)
+    || verifyBearer(request.headers.get("authorization"), process.env.ADMIN_API_TOKEN || "");
 }
 
 export function setSession(response: NextResponse) {
