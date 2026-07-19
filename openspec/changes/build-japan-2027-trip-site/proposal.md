@@ -1,20 +1,21 @@
 ## Why
 
-Friends and family need one pleasant, easy-to-share place to follow the Japan 2027 trip without relying on scattered social posts or private message threads. A small public trip journal can preserve the experience before, during, and after the journey.
+Friends and family need one pleasant, easy-to-share place to understand the April 2027 route and follow the trip without relying on scattered social posts or private message threads. A bilingual public trip journal can share the plan before departure and preserve the experience as daily stories and photographs are added.
 
 ## What Changes
 
-- Add a responsive public site introducing the Japan 2027 trip.
-- Present trip updates as chronological journal entries with dates, places, stories, and photos.
-- Let visitors browse highlights and open a stable link to an individual entry.
-- Add accessible navigation and social-sharing metadata so the site works well on phones and when links are shared.
-- Keep publishing static and content-focused; no visitor accounts, comments, CMS, or interactive map are included.
+- Publish equivalent Czech and English versions of the responsive Japan 2027 site.
+- Introduce the trip with original artwork combining a Japan map background and Torii gate foreground.
+- Show the planned route with the supplied watercolor artwork and accessible numbered links to the itinerary.
+- Present the supplied April 1–15 schedule in trip-day order and allow each day to gain journal details and photographs during the trip.
+- Give localized journal entries stable URLs, direct language switching, accessible navigation, and page-specific sharing metadata.
+- Keep publishing static and content-focused; no visitor accounts, comments, CMS, live tracking, external mapping service, or itinerary editor are included.
 
 ## Capabilities
 
 ### New Capabilities
 
-- `trip-journal`: Covers the trip overview, chronological stories, photo presentation, entry links, responsive browsing, and shareable page metadata.
+- `trip-journal`: Covers the bilingual trip overview, visual identity, planned-route map, daily itinerary and stories, photo presentation, localized entry links, responsive browsing, and shareable page metadata.
 
 ### Modified Capabilities
 
@@ -22,6 +23,6 @@ None.
 
 ## Impact
 
-- Introduces the public site pages, styles, trip content, and photo assets.
+- Introduces localized public pages, shared styles and artwork, route-map markup, itinerary content, and future photo assets.
 - Requires a static build/deployment target and a public URL.
-- Adds no backend, database, authentication, or third-party runtime service.
+- Adds no backend, database, authentication, mapping library, or third-party runtime service.

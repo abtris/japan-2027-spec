@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Japan 2027 — mapa Japonska a brána torii</title>
+  <desc id="desc">Stylizovaná mapa japonských ostrovů v pozadí a velká červená brána torii v popředí.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f5f0e6"/>
+      <stop offset=".55" stop-color="#dfe9e8"/>
+      <stop offset="1" stop-color="#b7c9d0"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#c08479" stop-opacity=".46"/>
+      <stop offset="1" stop-color="#c08479" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="torii" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#b55a49"/>
+      <stop offset="1" stop-color="#8c4035"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#463d34" flood-opacity=".22"/>
+    </filter>
+    <pattern id="contours" width="180" height="120" patternUnits="userSpaceOnUse">
+      <path d="M-20 42C28 9 65 83 116 45s79 14 105-9M-35 92C8 59 54 119 101 82s82 22 124-18" fill="none" stroke="#778992" stroke-opacity=".14" stroke-width="2"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#sky)"/>
+  <rect width="1600" height="1000" fill="url(#contours)"/>
+  <circle cx="1050" cy="380" r="310" fill="url(#sun)" opacity=".65"/>
+
+
+  <!-- Sakura points -->
+  <g fill="#c08479" opacity=".52">
+    <circle cx="1227" cy="110" r="5"/><circle cx="1168" cy="184" r="4"/><circle cx="1451" cy="286" r="6"/>
+    <circle cx="1291" cy="326" r="4"/><circle cx="1100" cy="420" r="5"/><circle cx="1334" cy="487" r="4"/>
+    <circle cx="982" cy="633" r="6"/><circle cx="871" cy="705" r="4"/><circle cx="773" cy="743" r="5"/>
+  </g>
+
+  <!-- Torii foreground -->
+  <g filter="url(#shadow)" transform="translate(780 300) scale(.5)">
+    <path d="M100 485h755l38 39H62z" fill="#73382f"/>
+    <path d="M75 414c156 27 578 27 738 0l26 55c-190 34-590 34-790 0z" fill="url(#torii)"/>
+    <path d="M148 500h73l-21 352h-91zM667 500h73l39 352h-92z" fill="url(#torii)"/>
+    <rect x="188" y="580" width="515" height="38" rx="3" fill="#a84f40"/>
+    <path d="M95 852h131l-8 31H85zM669 852h132l11 31H677z" fill="#65342d"/>
+    <rect x="412" y="482" width="76" height="94" rx="3" fill="#8c4035"/>
+  </g>
+
+  <path d="M0 892c235-36 421-18 609 12 207 33 418 6 596-24 142-24 268-19 395 5v115H0z" fill="#a4bac5" fill-opacity=".24"/>
+</svg>
