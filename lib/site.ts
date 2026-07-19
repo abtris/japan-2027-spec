@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import type { JournalEntry } from "./entries";
 import type { Locale } from "./content";
 
-export const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000");
+const vercelHost = process.env.VERCEL_BRANCH_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL;
+export const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL || (vercelHost ? `https://${vercelHost}` : "http://localhost:3000"));
 
 export function homeMetadata(locale: Locale): Metadata {
   const english = locale === "en";

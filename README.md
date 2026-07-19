@@ -22,3 +22,9 @@ Keep the project Root Directory set to `.` and connect a public Vercel Blob stor
 - `BLOB_READ_WRITE_TOKEN`: added automatically when the Blob store is connected
 
 After changing `NEXT_PUBLIC_SITE_URL`, redeploy so canonical and social URLs use the production origin.
+
+## Staging and observability
+
+The persistent `staging` branch deploys to Vercel Preview and receives a stable branch URL. Merge or push verified changes to `master` for production.
+
+Vercel Web Analytics and Speed Insights are included in both localized layouts. Enable both products for the Vercel project, then deploy to begin collecting page views and Core Web Vitals.
