@@ -5,11 +5,12 @@ import { SiteFooter, SiteHeader } from "./site-shell";
 
 function local(entry: JournalEntry, locale: Locale) {
   const english = locale === "en";
+  const photo = entry.photos[0];
   return {
     title: english ? entry.titleEn : entry.titleCs,
     summary: english ? entry.summaryEn : entry.summaryCs,
     place: english ? entry.placeEn : entry.placeCs,
-    alt: english ? entry.photoAltEn : entry.photoAltCs,
+    photo,
   };
 }
 
@@ -75,7 +76,7 @@ export function HomePage({ locale, entries }: { locale: Locale; entries: Journal
           <ol className="entry-grid">
             {entries.map((entry, index) => {
               const item = local(entry, locale);
-              const style = entry.photoUrl ? { backgroundImage: `linear-gradient(0deg, rgb(245 240 230 / 98%), rgb(245 240 230 / 20%)), url("${entry.photoUrl}")` } as CSSProperties : undefined;
+              const style = item.photo ? { backgroundImage: `linear-gradient(0deg, rgb(245 240 230 / 98%), rgb(245 240 230 / 20%)), url("${item.photo.url}")` } as CSSProperties : undefined;
               return (
                 <li key={entry.slug}>
                   <a className="entry-card" href={`${entryPrefix}/${entry.slug}/`} style={style}>

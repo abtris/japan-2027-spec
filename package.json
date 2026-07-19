@@ -2,10 +2,12 @@
   "name": "japan-2027",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "node --experimental-strip-types --test lib/entries.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "engines": {
@@ -15,6 +17,7 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/blob": "2.6.1",
     "@vercel/speed-insights": "^2.0.0",
+    "exifr": "7.1.3",
     "next": "16.2.10",
     "react": "19.2.7",
     "react-dom": "19.2.7"

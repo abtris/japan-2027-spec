@@ -27,3 +27,11 @@
 - [x] 5.1 Commit and push the verified migration to the existing GitHub production branch
 - [ ] 5.2 Connect the GitHub repository to Vercel with Root Directory `.`, provision Blob and secrets, and complete a production deployment
 - [ ] 5.3 Verify the deployed public pages, administrator login, test publication, and bilingual entry URLs
+
+## 6. Entry Management and Photo Details
+
+- [x] 6.1 Extend validation and Blob persistence for entry listing, replacement, deletion, and one-to-five photo records
+- [x] 6.2 Add selected EXIF extraction plus browser-side 2400-pixel WebP resizing without retaining originals, GPS, or unrelated metadata
+- [x] 6.3 Add the administrator entry list and create, edit, delete, and multi-photo controls
+- [x] 6.4 Render localized photo titles, descriptions, and available shooting settings on public entry pages
+- [x] 6.5 Verify CRUD authorization, photo-count limits, partial EXIF data, bilingual rendering, type checking, and production build
