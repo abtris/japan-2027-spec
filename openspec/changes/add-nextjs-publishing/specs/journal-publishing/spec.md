@@ -59,6 +59,25 @@ The system SHALL list stored entries for the authenticated owner and SHALL suppo
 - **WHEN** the authenticated owner confirms deletion
 - **THEN** the system removes the stored entry and its entry-specific photographs and the public entry URLs no longer resolve
 
+### Requirement: Itinerary-based quick entry
+The administrator SHALL offer each date from one day before through one day after the planned trip as a quick selection that fills the date and a safe slug, while retaining custom entries on any date.
+
+#### Scenario: Owner selects a planned day
+- **WHEN** the owner selects a day, including an individual day of a multi-day stop
+- **THEN** the editor fills that day's date and date-prefixed place or activity slug without clearing existing story text or photographs
+
+#### Scenario: Owner adds another entry
+- **WHEN** the suggested slug already exists
+- **THEN** the editor suggests an unused numbered suffix instead of replacing the existing entry
+
+#### Scenario: Owner writes outside the itinerary
+- **WHEN** the owner selects a custom entry
+- **THEN** any valid date remains available and the slug can be derived from the Czech title or entered manually
+
+#### Scenario: Owner edits published content
+- **WHEN** the owner opens a published entry
+- **THEN** its date is retained and its public slug is not changed by itinerary presets
+
 ### Requirement: Published journal rendering
 The system SHALL show persisted entries in the journal overview and SHALL render each entry at matching Czech and English stable URLs.
 

@@ -48,6 +48,10 @@ The administrator extracts only camera body, lens, focal length, aperture, shutt
 
 The administrator page lists stored entries and reuses the publishing form for both creation and editing. Saving an existing entry replaces its JSON document; deleting removes the entry document and its entry-specific images after explicit confirmation. This keeps the existing Blob document model instead of adding a database or CMS.
 
+### Prefill new entries from the existing itinerary
+
+Use a native select covering every calendar day from 31 March through 16 April 2027, derived from the public itinerary including each day of multi-day stops. Selecting a day fills its date and date-prefixed slug without replacing story text or photographs. Default to the first trip day. A custom-entry option retains unrestricted dates and title-derived slugs; repeated entries use an available numeric slug suffix. Existing entries keep their published slugs, and uploaded photographs lock the slug so retrying cannot move them into another entry's namespace.
+
 ### Deploy from the existing GitHub production branch
 
 Add `package.json` at the repository root so Vercel auto-detects Next.js with Root Directory `.`. Push the verified migration to the linked repository, connect that repository to the Vercel project, create a Blob store, and configure `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`, and the Blob credentials in Vercel.
