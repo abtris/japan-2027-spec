@@ -13,8 +13,7 @@ export default async function AdminPage() {
   const entries = await getStoredEntries();
   return (
     <main className="admin-shell">
-      <div className="admin-heading"><div><p className="eyebrow">Japonsko 2027</p><h1>Publikace</h1></div><form action="/api/admin/logout" method="post"><button type="submit" className="button-secondary">Odhlásit</button></form></div>
-      <p>Fotografie se před nahráním zmenší na webovou velikost. EXIF se uloží bez GPS údajů.</p>
+      <div className="admin-heading"><div><p className="eyebrow">Japonsko 2027 · Administrace</p><h1>Váš cestovní deník</h1></div><div className="admin-heading-actions"><a className="text-link" href="/" target="_blank" rel="noreferrer">Otevřít web ↗</a><form action="/api/admin/logout" method="post"><button type="submit" className="button-secondary">Odhlásit</button></form></div></div>
       <PublishForm entries={entries} />
     </main>
   );
