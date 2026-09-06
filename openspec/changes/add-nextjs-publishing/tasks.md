@@ -35,3 +35,9 @@
 - [x] 6.3 Add the administrator entry list and create, edit, delete, and multi-photo controls
 - [x] 6.4 Render localized photo titles, descriptions, and available shooting settings on public entry pages
 - [x] 6.5 Verify CRUD authorization, photo-count limits, partial EXIF data, bilingual rendering, type checking, and production build
+
+## 7. Itinerary-Based Quick Entry
+
+- [x] 7.1 Derive daily date and slug presets from the itinerary, including one day before and after the trip and separate Kyoto days
+- [x] 7.2 Add the quick-day select, custom entry mode, and collision-safe suggestions while preserving content and published slugs
+- [x] 7.3 Verify date boundaries, repeated-entry slugs, custom mode, browser interaction, and production build
