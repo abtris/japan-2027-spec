@@ -1,15 +1,12 @@
 import { cookies } from "next/headers";
 import type { NextRequest, NextResponse } from "next/server";
-import { credentialsConfigured, equal, sessionToken, SESSION_SECONDS, trustedOrigin, verifyBearer, verifySession } from "./auth-core";
+import { credentialsConfigured, equal, SESSION_SECONDS, trustedOrigin, verifyBearer } from "./auth-core";
+import { createStoredSession, revokeStoredSession, verifyStoredSession } from "./auth-store";
 
 const COOKIE_NAME = "japan-admin";
 
 function secret() {
   return process.env.ADMIN_SESSION_SECRET || "";
-}
-
-function scope() {
-  return process.env.VERCEL_ENV || "local";
 }
 
 export function authConfigured() {
@@ -21,7 +18,7 @@ export function verifyPassword(password: string) {
 }
 
 function verifyToken(token?: string) {
-  return verifySession(token, process.env.ADMIN_PASSWORD || "", secret(), scope());
+  return verifyStoredSession(token);
 }
 
 export function isTrustedOrigin(request: NextRequest) {
@@ -40,16 +37,15 @@ export async function isAuthenticated() {
   return verifyToken((await cookies()).get(COOKIE_NAME)?.value);
 }
 
-export function isAuthenticatedRequest(request: NextRequest) {
+export async function isAuthenticatedRequest(request: NextRequest) {
   if (verifyBearer(request.headers.get("authorization"), process.env.ADMIN_API_TOKEN || "")) return true;
-  return verifyToken(request.cookies.get(COOKIE_NAME)?.value)
-    && (["GET", "HEAD", "OPTIONS"].includes(request.method) || isTrustedOrigin(request));
+  return (["GET", "HEAD", "OPTIONS"].includes(request.method) || isTrustedOrigin(request))
+    && await verifyToken(request.cookies.get(COOKIE_NAME)?.value);
 }
 
-export function setSession(response: NextResponse) {
+export async function setSession(response: NextResponse) {
   if (!authConfigured()) throw new Error("Administrator authentication is not configured.");
-  const expires = Date.now() + SESSION_SECONDS * 1000;
-  response.cookies.set(COOKIE_NAME, sessionToken(expires, process.env.ADMIN_PASSWORD!, secret(), scope()), {
+  response.cookies.set(COOKIE_NAME, await createStoredSession(), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
@@ -58,6 +54,7 @@ export function setSession(response: NextResponse) {
   });
 }
 
-export function clearSession(response: NextResponse) {
+export async function clearSession(response: NextResponse, request: NextRequest) {
+  await revokeStoredSession(request.cookies.get(COOKIE_NAME)?.value);
   response.cookies.set(COOKIE_NAME, "", { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "strict", path: "/", maxAge: 0 });
 }
