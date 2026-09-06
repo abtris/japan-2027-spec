@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Japan 2027 Admin API
-  version: 1.0.0
+  version: 1.0.1
   description: Manage journal entries and request direct photo-upload tokens.
 servers:
   - url: https://japan.prskavec.net
@@ -31,6 +31,7 @@ paths:
     post:
       operationId: saveEntry
       summary: Create or replace a journal entry
+      description: Requires application/json. Valid Bearer clients do not need an Origin header; browser cookie authentication additionally requires a trusted Origin.
       requestBody:
         required: true
         content:
@@ -58,6 +59,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaType"
     delete:
       operationId: deleteEntry
       summary: Delete a journal entry and its photos
@@ -129,12 +132,20 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaType"
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
   responses:
+    UnsupportedMediaType:
+      description: The request Content-Type must be application/json.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
     BadRequest:
       description: Invalid request.
       content:

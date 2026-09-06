@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse, type NextRequest } from "next/server";
 import { isAuthenticatedRequest } from "../../../../../lib/auth";
+import { mediaType } from "../../../../../lib/auth-core";
 import { deleteEntry, getStoredEntries, saveEntry } from "../../../../../lib/entries";
 
 function refreshEntry(slug?: string) {
@@ -13,12 +14,13 @@ function refreshEntry(slug?: string) {
 }
 
 export async function GET(request: NextRequest) {
-  if (!isAuthenticatedRequest(request)) return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  if (!await isAuthenticatedRequest(request)) return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   return NextResponse.json({ entries: await getStoredEntries() });
 }
 
 export async function POST(request: NextRequest) {
-  if (!isAuthenticatedRequest(request)) return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  if (!await isAuthenticatedRequest(request)) return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  if (mediaType(request.headers.get("content-type")) !== "application/json") return NextResponse.json({ error: "Expected application/json." }, { status: 415 });
   try {
     const entry = await saveEntry(await request.json());
     refreshEntry(entry.slug);
@@ -32,7 +34,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  if (!isAuthenticatedRequest(request)) return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  if (!await isAuthenticatedRequest(request)) return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   const slug = request.nextUrl.searchParams.get("slug") || "";
   try {
     await deleteEntry(slug);
