@@ -10,9 +10,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   return (
     <main className="admin-shell admin-login">
       <p className="eyebrow">Japonsko 2027</p><h1>Publikace</h1>
-      {!authConfigured() && <p className="form-status form-status--error">Administrátorské proměnné prostředí nejsou nastavené.</p>}
+      {!authConfigured() && <p className="form-status form-status--error">Nastavte administrátorské heslo o délce 15–1024 znaků a session secret alespoň 32 znaků.</p>}
       <form className="login-form" action="/api/admin/login" method="post">
-        <label>Heslo<input name="password" type="password" required autoComplete="current-password" /></label>
+        <label>Heslo<input name="password" type="password" required minLength={15} maxLength={1024} autoComplete="current-password" /></label>
         <button type="submit">Přihlásit</button>
       </form>
       {error && <p className="form-status form-status--error" role="alert">Nesprávné heslo.</p>}

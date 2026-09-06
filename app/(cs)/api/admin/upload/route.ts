@@ -1,8 +1,10 @@
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { NextResponse, type NextRequest } from "next/server";
 import { isAuthenticatedRequest } from "../../../../../lib/auth";
+import { mediaType } from "../../../../../lib/auth-core";
 
 export async function POST(request: NextRequest) {
+  if (mediaType(request.headers.get("content-type")) !== "application/json") return NextResponse.json({ error: "Expected application/json." }, { status: 415 });
   try {
     const body = await request.json() as HandleUploadBody;
     if (body.type === "blob.generate-client-token" && !isAuthenticatedRequest(request)) {

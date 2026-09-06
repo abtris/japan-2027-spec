@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Publikace — Japonsko 2027", robots
 
 export default async function AdminPage() {
   const authenticated = await isAuthenticated();
-  if (!authConfigured()) return <main className="admin-shell"><h1>Publikace není nakonfigurovaná</h1><p>Nastavte <code>ADMIN_PASSWORD</code> a alespoň 32 znaků dlouhý <code>ADMIN_SESSION_SECRET</code>.</p></main>;
+  if (!authConfigured()) return <main className="admin-shell"><h1>Publikace není nakonfigurovaná</h1><p>Nastavte <code>ADMIN_PASSWORD</code> o délce 15–1024 znaků a alespoň 32 znaků dlouhý <code>ADMIN_SESSION_SECRET</code>.</p></main>;
   if (!authenticated) redirect("/admin/login");
   const entries = await getStoredEntries();
   return (
